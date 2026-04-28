@@ -26,25 +26,32 @@ def check_and_notify():
         send_email(current_price, price_change_24h)
 
 def send_email(price, change):
-    # 强制将变量转换为字符串，并去除可能存在的干扰字符
-    sender = str(os.environ.get('EMAIL_SENDER', '')).strip()
-    password = str(os.environ.get('EMAIL_PASSWORD', '')).strip()
-    receiver = str(os.environ.get('EMAIL_RECEIVER', '')).strip()
+    import base64
+    
+    sender = os.environ.get('EMAIL_SENDER', '').strip()
+    password = os.environ.get('EMAIL_PASSWORD', '').strip()
+    receiver = os.environ.get('EMAIL_RECEIVER', '').strip()
 
-    msg = MIMEText(f"警报：{SYMBOL} 24小时内下跌了 {change}%，当前价格 ${price}。")
-    msg['Subject'] = f"【币价预警】{SYMBOL} 跌幅超过 10%!"
-    msg['From'] = sender
-    msg['To'] = receiver
+    # 构造极简邮件头
+    mail_msg = (
+        f"From: {sender}\r\n"
+        f"To: {receiver}\r\n"
+        f"Subject: Crypto Alert\r\n\r\n"
+        f"{SYMBOL} dropped {change}%, price: {price}"
+    )
 
     try:
-        # 使用端口 465
         server = smtplib.SMTP_SSL("smtp.qq.com", 465)
-        # 核心修复：确保 login 参数是干净的字符串
-        server.login(sender, password)
-        server.send_message(msg)
+        # 不使用 server.login，改用更原始的 docmd (如果 login 持续报错)
+        server.ehlo()
+        server.login(sender, password) 
+        server.sendmail(sender, [receiver], mail_msg.encode('utf-8'))
         server.quit()
         print("邮件已发送成功！")
     except Exception as e:
-        print(f"邮件发送失败: {e}")
+        print(f"致命错误排查: {e}")
+
+
+
 if __name__ == "__main__":
     check_and_notify()
