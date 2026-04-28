@@ -26,21 +26,25 @@ def check_and_notify():
         send_email(current_price, price_change_24h)
 
 def send_email(price, change):
+    # 强制将变量转换为字符串，并去除可能存在的干扰字符
+    sender = str(os.environ.get('EMAIL_SENDER', '')).strip()
+    password = str(os.environ.get('EMAIL_PASSWORD', '')).strip()
+    receiver = str(os.environ.get('EMAIL_RECEIVER', '')).strip()
+
     msg = MIMEText(f"警报：{SYMBOL} 24小时内下跌了 {change}%，当前价格 ${price}。")
     msg['Subject'] = f"【币价预警】{SYMBOL} 跌幅超过 10%!"
-    msg['From'] = EMAIL_SENDER
-    msg['To'] = EMAIL_RECEIVER
+    msg['From'] = sender
+    msg['To'] = receiver
 
     try:
-        # 使用标准的 SMTP 端口 465 和 SSL
+        # 使用端口 465
         server = smtplib.SMTP_SSL("smtp.qq.com", 465)
-        # 显式调用 login
-        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        # 核心修复：确保 login 参数是干净的字符串
+        server.login(sender, password)
         server.send_message(msg)
         server.quit()
         print("邮件已发送成功！")
     except Exception as e:
         print(f"邮件发送失败: {e}")
-
 if __name__ == "__main__":
     check_and_notify()
