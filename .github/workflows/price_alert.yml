@@ -36,7 +36,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_SENDER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "【币价预警】Bitcoin 状态更新"
+          subject: "【币价预警】加密货币价格变化"
           to: ${{ secrets.EMAIL_RECEIVER }}
-          from: GitHub Actions Alert
+          from: "币价监控助手"
           body: ${{ steps.check.outputs.price_info }}
