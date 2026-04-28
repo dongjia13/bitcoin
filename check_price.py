@@ -10,6 +10,10 @@ EMAIL_SENDER = os.environ['EMAIL_SENDER']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_RECEIVER = os.environ['EMAIL_RECEIVER']
 
+print(f"--- 调试信息 ---")
+print(f"EMAIL_SENDER 类型: {type(EMAIL_SENDER)}")
+print(f"EMAIL_PASSWORD 类型: {type(EMAIL_PASSWORD)}")
+
 def check_and_notify():
     # 获取当前价格和 24 小时变化百分比
     url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={SYMBOL}"
