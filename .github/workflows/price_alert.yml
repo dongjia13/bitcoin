@@ -2,7 +2,8 @@ name: Crypto Price Alert
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    # 这里的表达式含义是：在每小时的 0, 20, 40 分钟各执行一次
+    - cron: '*/20 * * * *'
   workflow_dispatch:
 
 jobs:
