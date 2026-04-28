@@ -20,7 +20,7 @@ def check_and_notify():
 
     print(f"当前 {SYMBOL} 价格: {current_price}, 24h 变化: {price_change_24h}%")
 
-    if if current_price > 0:  # 下跌超过 10%
+    if current_price > 0:  # 下跌超过 10%
         send_email(current_price, price_change_24h)
 
 def send_email(price, change):
