@@ -10,9 +10,7 @@ EMAIL_SENDER = os.environ['EMAIL_SENDER']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_RECEIVER = os.environ['EMAIL_RECEIVER']
 
-print(f"--- 调试信息 ---")
-print(f"EMAIL_SENDER 类型: {type(EMAIL_SENDER)}")
-print(f"EMAIL_PASSWORD 类型: {type(EMAIL_PASSWORD)}")
+
 
 def check_and_notify():
     # 获取当前价格和 24 小时变化百分比
@@ -33,11 +31,16 @@ def send_email(price, change):
     msg['From'] = EMAIL_SENDER
     msg['To'] = EMAIL_RECEIVER
 
-    # 以 QQ 邮箱 SMTP 为例 (smtp.qq.com, 端口 465)
-    with smtplib.SMTP_SSL("smtp.qq.com", 465) as server:
+    try:
+        # 使用标准的 SMTP 端口 465 和 SSL
+        server = smtplib.SMTP_SSL("smtp.qq.com", 465)
+        # 显式调用 login
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
         server.send_message(msg)
-    print("邮件已发送")
+        server.quit()
+        print("邮件已发送成功！")
+    except Exception as e:
+        print(f"邮件发送失败: {e}")
 
 if __name__ == "__main__":
     check_and_notify()
