@@ -3,7 +3,7 @@ import os
 
 def check():
     # 1. 定义要监控的币种 ID (对应 CoinGecko 的 API ID)
-    coin_ids = ["bitcoin", "ethereum", "binancecoin", "solana","hyperliquid"]
+    coin_ids = ["bitcoin", "ethereum", "binancecoin", "solana", "hyperliquid"]
     ids_str = ",".join(coin_ids)
     
     url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={ids_str}"
